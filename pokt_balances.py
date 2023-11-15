@@ -32,15 +32,19 @@ with open('pokt_balances.csv', 'w') as csvfile:
                 "address": address
             }
 
-            response = requests.post(url, headers = headers, json = data)
-            balance = response.json()['balance'] / 1000000
-            row.append(balance)
+            try:
+                response = requests.post(url, headers = headers, json = data)
+                balance = response.json()['balance'] / 1000000
+                row.append(balance)
+            except(e):
+                print(f'Error in response: {e}, response: {response}')
+                exit()
 
             writer.writerow(row)
 
             counter += 1
             if counter % 10 == 0:
                 print(f'{math.floor(counter * 100 / len(addresses))}% completed')
-            csvfile.flush()
+                csvfile.flush()
 
 print('done.')
